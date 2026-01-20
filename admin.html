@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Minas Imóveis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background: #111827; color: #E2E8F0; font-family: sans-serif; }
+        /* Estilização do Input File */
+        .file-upload-wrapper {
+            border: 2px dashed #4B5563;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .file-upload-wrapper:hover { border-color: #C6A87C; background: rgba(198, 168, 124, 0.05); }
+    </style>
+</head>
+<body class="p-8 max-w-5xl mx-auto">
+    
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-[#C6A87C] flex items-center gap-3">
+            <i data-lucide="layout-dashboard"></i> Gestão de Imóveis
+        </h1>
+        <a href="index.html" class="text-gray-400 hover:text-white text-sm underline">Ir para o Site &rarr;</a>
+    </div>
+    
+    <div class="bg-gray-800 p-8 rounded-xl mb-10 border border-gray-700 shadow-xl">
+        <h2 class="text-xl font-bold mb-6 text-white border-b border-gray-700 pb-2">Adicionar Novo Imóvel</h2>
+        
+        <form id="addPropertyForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div class="col-span-1 md:col-span-2">
+                <label class="block text-sm font-bold text-gray-400 mb-2">Foto de Capa</label>
+                <div class="relative">
+                    <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="previewImage(this)">
+                    <label for="imageInput" class="file-upload-wrapper block" id="uploadArea">
+                        <i data-lucide="upload-cloud" class="w-10 h-10 text-gray-500 mx-auto mb-2"></i>
+                        <p class="text-gray-400 text-sm">Clique para selecionar uma imagem</p>
+                        <p class="text-gray-600 text-xs mt-1">(JPG, PNG - Máx recomendável: 500kb)</p>
+                    </label>
+                    <div id="imagePreviewContainer" class="hidden mt-4 relative group w-full h-64 bg-black rounded-lg overflow-hidden border border-gray-600">
+                        <img id="imagePreview" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                        <button type="button" onclick="removeImage()" class="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full hover:bg-red-700 shadow-lg">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-2">
+                <label class="text-xs uppercase font-bold text-[#C6A87C]">Título do Anúncio</label>
+                <input type="text" id="title" placeholder="Ex: Mansão Alphaville" class="w-full bg-gray-900 border border-gray-600 p-3 rounded text-white focus:border-[#C6A87C] outline-none" required>
+            </div>
+
+            <div>
+                <label class="text-xs uppercase font-bold text-gray-500">Tipo</label>
+                <select id="type" class="w-full bg-gray-900 border border-gray-600 p-3 rounded text-white focus:border-[#C6A87C] outline-none">
+                    <option value="Casa">Casa</option>
+                    <option value="Apartamento">Apartamento</option>
+                    <option value="Fazenda">Fazenda</option>
+                    <option value="Galpão">Galpão</option>
+                    <option value="Terreno">Terreno</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="text-xs uppercase font-bold text-gray-500">Finalidade</label>
+                <select id="purpose" class="w-full bg-gray-900 border border-gray-600 p-3 rounded text-white focus:border-[#C6A87C] outline-none">
+                    <option value="comprar">Venda</option>
+                    <option value="alugar">Locação</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="text-xs uppercase font-bold text-gray-500">Preço (R$)</label>
+                <input type="number" id="price" placeholder="Ex: 3500000" class="w-full bg-gray-900 border border-gray-600 p-3 rounded text-white focus:border-[#C6A87C] outline-none" required>
+            </div>
+
+            <div>
+                <label class="text-xs uppercase font-bold text-gray-500">Localização</label>
+                <input type="text" id="location" placeholder="Ex: Damha I, Uberaba" class="w-full bg-gray-900 border border-gray-600 p-3 rounded text-white focus:border-[#C6A87C] outline-none" required>
+            </div>
+
+            <div class="grid grid-cols-4 gap-2 col-span-2 bg-gray-900 p-4 rounded border border-gray-700">
+                <div>
+                    <label class="text-[10px] uppercase text-gray-500 block mb-1">Quartos</label>
+                    <input type="number" id="beds" value="0" class="w-full bg-gray-800 border border-gray-600 p-2 rounded text-white text-center">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase text-gray-500 block mb-1">Banheiros</label>
+                    <input type="number" id="baths" value="0" class="w-full bg-gray-800 border border-gray-600 p-2 rounded text-white text-center">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase text-gray-500 block mb-1">Vagas</label>
+                    <input type="number" id="garage" value="0" class="w-full bg-gray-800 border border-gray-600 p-2 rounded text-white text-center">
+                </div>
+                <div>
+                    <label class="text-[10px] uppercase text-gray-500 block mb-1">Área (m²)</label>
+                    <input type="number" id="area" value="0" class="w-full bg-gray-800 border border-gray-600 p-2 rounded text-white text-center">
+                </div>
+            </div>
+            
+            <div class="col-span-2">
+                <label class="text-xs uppercase font-bold text-gray-500">Descrição</label>
+                <textarea id="description" placeholder="Descreva os detalhes do imóvel..." class="w-full bg-gray-900 border border-gray-600 p-3 rounded text-white h-24 focus:border-[#C6A87C] outline-none"></textarea>
+            </div>
+            
+            <div class="col-span-2 pt-4">
+                <button type="submit" class="w-full bg-[#C6A87C] hover:bg-[#B39467] text-black font-bold py-4 px-6 rounded-lg shadow-lg transform active:scale-95 transition-all uppercase tracking-widest text-sm">
+                    Salvar Imóvel
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-gray-800 p-8 rounded-xl border border-gray-700">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-white">Imóveis Cadastrados</h2>
+            <button onclick="clearAll()" class="text-red-400 text-xs hover:text-red-300 uppercase font-bold border border-red-900/50 px-3 py-1 rounded bg-red-900/20">Resetar Tudo</button>
+        </div>
+        <div id="propertyList" class="space-y-4">
+            </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        let currentBase64Image = "";
+
+        // Função de Preview de Imagem
+        function previewImage(input) {
+            const file = input.files[0];
+            if (file) {
+                // Verificar tamanho (limite seguro para localStorage: ~500kb a 1MB é ideal, avisar se for maior)
+                if (file.size > 1000000) {
+                    alert("Atenção: Imagem muito grande! Pode deixar o site lento. Tente usar imagens menores que 1MB.");
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentBase64Image = e.target.result;
+                    document.getElementById('imagePreview').src = currentBase64Image;
+                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                    document.getElementById('uploadArea').classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage() {
+            document.getElementById('imageInput').value = "";
+            currentBase64Image = "";
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+            document.getElementById('uploadArea').classList.remove('hidden');
+        }
+
+        // Carregar e Exibir
+        function loadProperties() {
+            const list = document.getElementById('propertyList');
+            list.innerHTML = '';
+            const props = JSON.parse(localStorage.getItem('minas_imoveis_data') || '[]');
+            
+            if(props.length === 0) {
+                list.innerHTML = '<div class="text-center py-10 text-gray-500 border border-dashed border-gray-700 rounded-lg">Nenhum imóvel cadastrado.<br>O site usará os dados de demonstração.</div>';
+                return;
+            }
+
+            props.forEach((p, index) => {
+                const item = document.createElement('div');
+                item.className = 'bg-gray-900 p-4 rounded-lg flex justify-between items-center border border-gray-700 hover:border-[#C6A87C] transition-colors';
+                
+                // Tratar imagem padrão se não tiver
+                const imgDisplay = p.image || 'https://via.placeholder.com/150';
+
+                item.innerHTML = `
+                    <div class="flex gap-4 items-center overflow-hidden">
+                        <div class="w-16 h-16 shrink-0 rounded bg-gray-800 overflow-hidden">
+                            <img src="${imgDisplay}" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <p class="font-bold text-white truncate max-w-[200px] md:max-w-md">${p.title}</p>
+                            <p class="text-xs text-gray-400 uppercase tracking-wider">${p.location} • R$ ${parseInt(p.price).toLocaleString('pt-BR')}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteProp(${index})" class="text-red-500 p-2 hover:bg-red-900/20 rounded transition-colors" title="Excluir">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                `;
+                list.appendChild(item);
+            });
+            lucide.createIcons();
+        }
+
+        // Salvar Imóvel
+        document.getElementById('addPropertyForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            if (!currentBase64Image) {
+                if(!confirm("Você não selecionou uma imagem. O imóvel ficará sem foto. Deseja continuar?")) return;
+                currentBase64Image = "https://via.placeholder.com/800x600?text=Sem+Foto"; // Placeholder
+            }
+
+            const newProp = {
+                id: Date.now(), // ID único baseado no tempo
+                title: document.getElementById('title').value,
+                type: document.getElementById('type').value,
+                purpose: document.getElementById('purpose').value,
+                price: Number(document.getElementById('price').value),
+                location: document.getElementById('location').value,
+                image: currentBase64Image, // Salva a string Base64 da imagem
+                beds: Number(document.getElementById('beds').value),
+                baths: Number(document.getElementById('baths').value),
+                garage: Number(document.getElementById('garage').value),
+                area: Number(document.getElementById('area').value),
+                description: document.getElementById('description').value,
+                // Gerando features automáticas para manter o padrão visual do site
+                features: [
+                    {icon: 'check-circle', text: 'Documentação OK'},
+                    {icon: 'shield', text: 'Segurança'},
+                    {icon: 'star', text: 'Oportunidade'}
+                ]
+            };
+
+            const props = JSON.parse(localStorage.getItem('minas_imoveis_data') || '[]');
+            props.unshift(newProp); // Adiciona no começo da lista
+            
+            try {
+                localStorage.setItem('minas_imoveis_data', JSON.stringify(props));
+                alert('Imóvel cadastrado com sucesso!');
+                removeImage(); // Limpa preview
+                e.target.reset(); // Limpa formulário
+                loadProperties(); // Atualiza lista
+            } catch (error) {
+                alert("Erro: A imagem pode ser muito grande para o navegador. Tente uma imagem menor.");
+                console.error(error);
+            }
+        });
+
+        function deleteProp(index) {
+            if(confirm('Tem certeza que deseja excluir este imóvel?')) {
+                const props = JSON.parse(localStorage.getItem('minas_imoveis_data') || '[]');
+                props.splice(index, 1);
+                localStorage.setItem('minas_imoveis_data', JSON.stringify(props));
+                loadProperties();
+            }
+        }
+
+        function clearAll() {
+            if(confirm('ATENÇÃO: Isso apagará TODOS os imóveis cadastrados. Continuar?')) {
+                localStorage.removeItem('minas_imoveis_data');
+                loadProperties();
+            }
+        }
+
+        // Inicializar
+        loadProperties();
+    </script>
+</body>
+</html>
