@@ -187,7 +187,7 @@
                 </ul>
             </div>
             <div class="h-48 rounded-lg overflow-hidden border border-brand-border bg-gray-900 transition-all">
-                <iframe src="https://maps.google.com/maps?q=Av.+Frei+Paulino,+288+-+Abadia,+Uberaba+-+MG&t=&z=17&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                <iframe src="https://maps.google.com/maps?width=100%25&height=600&hl=pt-BR&q=Av.%20Frei%20Paulino,%20288%20-%20Abadia,%20Uberaba-MG+(Minas%20Im%C3%B3veis)&t=&z=16&ie=UTF8&iwloc=B&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
             </div>
         </div>
         
@@ -255,8 +255,9 @@
                 title: "Casa Moderna para Locação",
                 location: "Parque do Mirante, Uberaba - MG",
                 price: 4500.00, 
-                image: "https://images.unsplash.com/photo-1600596542815-e495e91f62b8?q=80&w=1600&auto=format&fit=crop",
-                gallery: ["https://images.unsplash.com/photo-1600596542815-e495e91f62b8?q=80&w=1600&auto=format&fit=crop"],
+                // IMAGEM CORRIGIDA AQUI
+                image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=1600",
+                gallery: ["https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&q=80&w=1600"],
                 beds: 3,
                 baths: 2,
                 garage: 2,
@@ -472,179 +473,6 @@
                         </div>
                     </div>
                 </div>`;
-                }, 100);
-
-                return `
-                <div class="fade-in pb-32 lg:pb-20 lg:pt-24">
-                    <div class="bg-black relative">
-                        <div class="relative h-[45vh] lg:h-[65vh] w-full group">
-                            <img id="main-gallery-image" src="${photos[0]}" class="w-full h-full object-contain transition-opacity duration-300">
-                            <div class="img-watermark">MINAS IMÓVEIS</div>
-                             ${photos.length > 1 ? `
-                            <button onclick="app.changeImage(-1)" class="absolute top-1/2 left-4 -translate-y-1/2 bg-black/40 text-white p-3 rounded-full backdrop-blur active:scale-90 border border-white/10"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
-                            <button onclick="app.changeImage(1)" class="absolute top-1/2 right-4 -translate-y-1/2 bg-black/40 text-white p-3 rounded-full backdrop-blur active:scale-90 border border-white/10"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
-                            ` : ''}
-                            <button onclick="app.router('catalog')" class="absolute top-4 left-4 bg-black/50 text-white px-4 py-2 rounded-full flex items-center gap-2 text-[10px] font-bold uppercase backdrop-blur border border-white/10"><i data-lucide="arrow-left" class="w-3 h-3"></i> Voltar</button>
-                        </div>
-                        ${photos.length > 1 ? `
-                        <div class="w-full px-4 py-4 bg-[#080A12] border-b border-white/5">
-                            <div class="flex gap-3 overflow-x-auto no-scrollbar snap-x">
-                                ${photos.map((img, i) => `
-                                    <button onclick="app.selectImage(${i})" class="gallery-thumb flex-shrink-0 w-20 h-16 rounded overflow-hidden bg-gray-900 relative snap-center ${i===0 ? 'active' : ''}"><img src="${img}" class="w-full h-full object-cover"></button>
-                                `).join('')}
-                            </div>
-                            <p class="text-center text-[9px] text-gray-500 mt-2 font-bold uppercase"><span id="counter-display">1</span> / ${photos.length}</p>
-                        </div>` : ''}
-                    </div>
-                    <div class="max-w-6xl mx-auto px-5 lg:px-8 mt-8">
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                            <div class="lg:col-span-2 space-y-8">
-                                <div>
-                                    <span class="bg-brand-gold/10 text-brand-gold text-[10px] font-bold px-3 py-1 rounded inline-block mb-3 uppercase tracking-widest">${p.type} • ${p.purpose}</span>
-                                    <h1 class="text-2xl lg:text-4xl font-display font-black text-white leading-tight mb-2">${p.title}</h1>
-                                    <p class="text-gray-400 text-sm flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-brand-gold"></i> ${p.location}</p>
-                                </div>
-                                <div class="grid grid-cols-4 gap-2 bg-[#121826] p-4 rounded-xl border border-white/5">
-                                    <div class="text-center"><span class="block text-lg font-bold text-white">${p.beds}</span><span class="text-[9px] text-gray-500 uppercase font-bold">Qtos</span></div>
-                                    <div class="text-center"><span class="block text-lg font-bold text-white">${p.baths}</span><span class="text-[9px] text-gray-500 uppercase font-bold">Ban</span></div>
-                                    <div class="text-center"><span class="block text-lg font-bold text-white">${p.garage}</span><span class="text-[9px] text-gray-500 uppercase font-bold">Vagas</span></div>
-                                    <div class="text-center"><span class="block text-lg font-bold text-white truncate">${formatNumber(p.area)}</span><span class="text-[9px] text-gray-500 uppercase font-bold">M²</span></div>
-                                </div>
-                                ${featuresList.length ? `
-                                <div>
-                                    <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-4 flex items-center gap-2"><span class="w-4 h-px bg-brand-gold"></span> Detalhes</h3>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        ${featuresList.map(f => `<div class="flex items-center gap-3 bg-[#121826] p-3 rounded border border-white/5"><i data-lucide="${f.icon||'check'}" class="w-4 h-4 text-brand-gold"></i><span class="text-gray-300 text-sm">${f.text}</span></div>`).join('')}
-                                    </div>
-                                </div>` : ''}
-                                <div>
-                                    <h3 class="text-xs font-bold text-white uppercase tracking-widest mb-4">Sobre</h3>
-                                    <p class="text-gray-400 text-sm leading-relaxed whitespace-pre-line text-justify">${p.description}</p>
-                                </div>
-                            </div>
-                            <div class="hidden lg:block lg:col-span-1">
-                                <div class="glass-panel p-8 rounded-xl sticky top-32 border border-brand-gold/10">
-                                    <p class="text-xs text-gray-400 uppercase font-bold mb-1">Valor Total</p>
-                                    <p class="text-4xl font-black text-white mb-6">${formatCurrency(p.price)}</p>
-                                    <a href="https://wa.me/5534984408992?text=Olá, interesse no imóvel ${p.title} (Cód: ${p.id})" target="_blank" class="w-full bg-[#25D366] hover:bg-green-600 text-white font-bold py-4 rounded-lg flex items-center justify-center gap-2 uppercase text-xs tracking-widest shadow-lg transition-transform hover:-translate-y-1">
-                                        <svg class="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                                        Chamar no WhatsApp
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>`;
-            },
-            about: () => `<div class="pt-32 max-w-4xl mx-auto px-6 text-center fade-in pb-20"><h1 class="text-3xl font-display font-bold text-white mb-6">Sobre Nós</h1><div class="bg-[#121826] p-8 rounded-xl text-gray-300 border border-white/5"><p>Referência em negócios imobiliários.</p></div></div>`
-        };
-
-        const app = {
-            init: () => { 
-                app.router('home'); 
-                lucide.createIcons();
-                generateWatermarkGrid(); 
-            },
-            router: (v) => { 
-                state.view=v; window.scrollTo(0,0); 
-                document.getElementById('sticky-bar-container').innerHTML = ''; 
-                document.getElementById('app-container').innerHTML = views[v]?views[v]():views['home'](); 
-                lucide.createIcons();
-            },
-            showDetails: (id) => { const p = state.properties.find(x=>x.id===id); if(p){ state.selectedProperty=p; state.currentImageIndex = 0; app.router('details'); } },
-            toggleFilters: () => { state.isMobileFiltersOpen = !state.isMobileFiltersOpen; app.router('catalog'); }, 
-            
-            updateCatalogResults: () => {
-                const grid = document.getElementById('results-grid');
-                const count = document.getElementById('results-count');
-                if(grid && count) {
-                    count.innerText = `${state.filteredProperties.length} Resultados`;
-                    grid.innerHTML = state.filteredProperties.length === 0
-                        ? `<div class="text-center py-20 opacity-50 col-span-full"><p class="text-gray-400 text-sm">Sem resultados.</p></div>`
-                        : state.filteredProperties.map(createCard).join('');
-                    lucide.createIcons();
-                }
-            },
-
-            updatePurposeButtons: (val) => {
-                const btnBuy = document.getElementById('btn-buy');
-                const btnRent = document.getElementById('btn-rent');
-                if(!btnBuy || !btnRent) return;
-
-                const active = "bg-brand-gold text-black border-brand-gold";
-                const inactive = "border-white/10 text-gray-400";
-                const base = "h-10 text-[10px] font-bold uppercase rounded-lg border transition-all";
-
-                if (val === 'comprar') {
-                    btnBuy.className = `${base} ${active}`;
-                    btnRent.className = `${base} ${inactive}`;
-                } else {
-                    btnBuy.className = `${base} ${inactive}`;
-                    btnRent.className = `${base} ${active}`;
-                }
-            },
-
-            setFilter: (k,v) => { 
-                if (k === 'minPrice' || k === 'maxPrice' || k === 'beds' || k === 'baths' || k === 'garage') {
-                    // Ajuste de segurança: Se vier vazio, usa os limites do dataset
-                    const numV = Number(v);
-                    if (k === 'minPrice') state.filters.minPrice = v ? numV : state.datasetMin;
-                    else if (k === 'maxPrice') state.filters.maxPrice = v ? numV : state.datasetMax;
-                    else state.filters[k] = numV; // beds, baths, garage
-                } else {
-                    state.filters[k] = v;
-                }
-                
-                if (k === 'purpose') app.updatePurposeButtons(v);
-
-                app.applyFilters(); 
-            },
-            
-            resetFilters: () => {
-                state.filters = {type:'all', purpose:'all', search:'', minPrice: state.datasetMin, maxPrice: state.datasetMax, beds:0, baths:0, garage:0};
-                
-                const setVal = (id, v) => { const el = document.getElementById(id); if(el) el.value = v; };
-                setVal('filter-search', '');
-                setVal('filter-min', state.datasetMin); // Reseta para o minimo real
-                setVal('filter-max', state.datasetMax); // Reseta para o maximo real
-                setVal('filter-type', 'all');
-                setVal('filter-beds', '0');
-                setVal('filter-baths', '0');
-                setVal('filter-garage', '0');
-                
-                const btnBuy = document.getElementById('btn-buy');
-                const btnRent = document.getElementById('btn-rent');
-                const inactive = "border-white/10 text-gray-400";
-                const base = "h-10 text-[10px] font-bold uppercase rounded-lg border transition-all";
-                if(btnBuy) btnBuy.className = `${base} ${inactive}`;
-                if(btnRent) btnRent.className = `${base} ${inactive}`;
-                
-                app.applyFilters();
-            },
-            
-            applyFilters: () => { 
-                let r=state.properties, f=state.filters; 
-                if(f.purpose!=='all') r=r.filter(p=>p.purpose.toLowerCase()===f.purpose.toLowerCase()); 
-                if(f.type!=='all') r=r.filter(p=>p.type===f.type); 
-                
-                // Filtro de Preço Robusto
-                r=r.filter(p=>Number(p.price)>=f.minPrice && Number(p.price)<=f.maxPrice); 
-                
-                // Filtros Numéricos (Quarto, Banheiro, Vaga)
-                if(f.beds>0) r=r.filter(p=>Number(p.beds)>=f.beds); 
-                if(f.baths>0) r=r.filter(p=>Number(p.baths)>=f.baths); 
-                if(f.garage>0) r=r.filter(p=>Number(p.garage)>=f.garage); 
-                
-                // Busca por Texto (Título ou Localização)
-                if(f.search) r=r.filter(p=>p.title.toLowerCase().includes(f.search.toLowerCase())||p.location.toLowerCase().includes(f.search.toLowerCase())); 
-                
-                state.filteredProperties=r; 
-                
-                if(state.view==='catalog') {
-                    app.updateCatalogResults();
-                } else {
-                    app.router('catalog');
-                }
             },
             changeImage: (d) => {
                 const p = state.selectedProperty; const photos = p.gallery||[p.image];
