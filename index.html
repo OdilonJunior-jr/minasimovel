@@ -199,19 +199,127 @@
     </footer>
 
     <script>
-        const stored = JSON.parse(localStorage.getItem('minas_imoveis_data') || '[]');
-        const properties = [...stored]; 
+        // --- DADOS FIXOS PARA A APRESENTAÇÃO (DEMO) ---
+        // Fotos de Unsplash (Alta qualidade, estilo profissional)
+        const demoData = [
+            {
+                id: 101,
+                title: "Mansão Neoclássica no Damha I",
+                location: "Damha I, Uberaba - MG",
+                price: 3500000,
+                image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1600&auto=format&fit=crop",
+                gallery: [
+                    "https://images.unsplash.com/photo-1613490493576-7fde63acd811?q=80&w=1600&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1584622050111-993a426fbf0a?q=80&w=1600&auto=format&fit=crop"
+                ],
+                beds: 4,
+                baths: 5,
+                garage: 4,
+                area: 450,
+                type: "Casa",
+                purpose: "Comprar",
+                description: "Residência espetacular de alto padrão. Possui área de lazer completa, piscina aquecida, espaço gourmet integrado e automação residencial em todos os ambientes."
+            },
+            {
+                id: 102,
+                title: "Apartamento Vista Panorâmica",
+                location: "Centro, Uberaba - MG",
+                price: 850000,
+                image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1600&auto=format&fit=crop",
+                gallery: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1600&auto=format&fit=crop"],
+                beds: 3,
+                baths: 3,
+                garage: 2,
+                area: 120,
+                type: "Apartamento",
+                purpose: "Comprar",
+                description: "Apartamento moderno em andar alto com vista definitiva. Sala ampla para 2 ambientes, varanda gourmet envidraçada e cozinha planejada."
+            },
+            {
+                id: 103,
+                title: "Fazenda Produtiva na Região",
+                location: "Zona Rural, Uberaba - MG",
+                price: 12500000,
+                image: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1600&auto=format&fit=crop",
+                gallery: ["https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1600&auto=format&fit=crop"],
+                beds: 5,
+                baths: 4,
+                garage: 10,
+                area: 450000, 
+                type: "Fazenda",
+                purpose: "Comprar",
+                description: "Excelente oportunidade para agronegócio. Terra de cultura, rica em água com nascentes e represa. Casa sede centenária reformada."
+            },
+            {
+                id: 104,
+                title: "Casa Moderna para Locação",
+                location: "Parque do Mirante, Uberaba - MG",
+                price: 4500.00, 
+                image: "https://images.unsplash.com/photo-1600596542815-e495e91f62b8?q=80&w=1600&auto=format&fit=crop",
+                gallery: ["https://images.unsplash.com/photo-1600596542815-e495e91f62b8?q=80&w=1600&auto=format&fit=crop"],
+                beds: 3,
+                baths: 2,
+                garage: 2,
+                area: 180,
+                type: "Casa",
+                purpose: "Alugar",
+                description: "Casa térrea recém construída disponível para locação. Design moderno, ambientes integrados e muita iluminação natural."
+            },
+            {
+                id: 105,
+                title: "Flat Mobiliado Universitário",
+                location: "Universitário, Uberaba - MG",
+                price: 1800.00, 
+                image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1600&auto=format&fit=crop",
+                gallery: ["https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?q=80&w=1600&auto=format&fit=crop"],
+                beds: 1,
+                baths: 1,
+                garage: 1,
+                area: 45,
+                type: "Apartamento",
+                purpose: "Alugar",
+                description: "Flat completo, mobiliado, ideal para estudantes. Próximo à universidade e comércios."
+            },
+            {
+                id: 106,
+                title: "Terreno em Condomínio Fechado",
+                location: "EcoPark, Uberaba - MG",
+                price: 250000, 
+                image: "https://images.unsplash.com/photo-1500076656116-558758c991c1?q=80&w=1600&auto=format&fit=crop",
+                gallery: ["https://images.unsplash.com/photo-1500076656116-558758c991c1?q=80&w=1600&auto=format&fit=crop"],
+                beds: 0,
+                baths: 0,
+                garage: 0,
+                area: 1000,
+                type: "Terreno",
+                purpose: "Comprar",
+                description: "Lote plano em condomínio de luxo. Ótima topografia e localização privilegiada dentro do empreendimento."
+            }
+        ];
+
+        // 1. Tenta carregar do LocalStorage
+        const localData = JSON.parse(localStorage.getItem('minas_imoveis_data') || '[]');
+        
+        // 2. Se o localStorage estiver vazio (como na Vercel para cliente novo), usa os dados Demo.
+        // Se você tiver adicionado algo no seu PC, ele vai usar o seu.
+        const properties = (localData && localData.length > 0) ? localData : demoData;
+
+        // 3. Calcula Minimo e Máximo REAIS baseados nos dados carregados
         const allPrices = properties.map(p => Number(p.price));
         const realMin = allPrices.length ? Math.min(...allPrices) : 0;
-        const realMax = allPrices.length ? Math.max(...allPrices) : 50000000;
+        const realMax = allPrices.length ? Math.max(...allPrices) : 10000000;
 
         const state = { 
             view: 'home', 
             properties, 
             filteredProperties: properties, 
+            // Inicializa os filtros com os valores Min/Max corretos dos dados
             filters: { type: 'all', purpose: 'all', search: '', minPrice: realMin, maxPrice: realMax, beds: 0, baths: 0, garage: 0 },
             isMobileFiltersOpen: false,
-            datasetMin: realMin, datasetMax: realMax, selectedProperty: null, currentImageIndex: 0
+            datasetMin: realMin, 
+            datasetMax: realMax, 
+            selectedProperty: null, 
+            currentImageIndex: 0
         };
 
         const formatCurrency = (v) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
@@ -317,15 +425,15 @@
                                 </select>
                             </div>
                             <div class="grid grid-cols-3 gap-2 border-t border-white/10 pt-3">
-                                <div><label class="text-[9px] text-gray-500 text-center block mb-1 font-bold uppercase flex items-center justify-center gap-1"><i data-lucide="bed-double" class="w-3 h-3 text-brand-gold"></i> Qtos</label><select id="filter-beds" onchange="app.setFilter('beds', Number(this.value))" class="input-padrao text-center px-1"><option value="0" ${state.filters.beds == 0 ? 'selected' : ''}>-</option><option value="2" ${state.filters.beds == 2 ? 'selected' : ''}>2+</option><option value="3" ${state.filters.beds == 3 ? 'selected' : ''}>3+</option><option value="4" ${state.filters.beds == 4 ? 'selected' : ''}>4+</option></select></div>
-                                <div><label class="text-[9px] text-gray-500 text-center block mb-1 font-bold uppercase flex items-center justify-center gap-1"><i data-lucide="shower-head" class="w-3 h-3 text-brand-gold"></i> Ban</label><select id="filter-baths" onchange="app.setFilter('baths', Number(this.value))" class="input-padrao text-center px-1"><option value="0" ${state.filters.baths == 0 ? 'selected' : ''}>-</option><option value="2" ${state.filters.baths == 2 ? 'selected' : ''}>2+</option><option value="3" ${state.filters.baths == 3 ? 'selected' : ''}>3+</option></select></div>
-                                <div><label class="text-[9px] text-gray-500 text-center block mb-1 font-bold uppercase flex items-center justify-center gap-1"><i data-lucide="car" class="w-3 h-3 text-brand-gold"></i> Vag</label><select id="filter-garage" onchange="app.setFilter('garage', Number(this.value))" class="input-padrao text-center px-1"><option value="0" ${state.filters.garage == 0 ? 'selected' : ''}>-</option><option value="2" ${state.filters.garage == 2 ? 'selected' : ''}>2+</option><option value="3" ${state.filters.garage == 3 ? 'selected' : ''}>3+</option></select></div>
+                                <div><label class="text-[9px] text-gray-500 text-center block mb-1 font-bold uppercase flex items-center justify-center gap-1"><i data-lucide="bed-double" class="w-3 h-3 text-brand-gold"></i> Qtos</label><select id="filter-beds" onchange="app.setFilter('beds', Number(this.value))" class="input-padrao text-center px-1"><option value="0" ${state.filters.beds == 0 ? 'selected' : ''}>-</option><option value="1" ${state.filters.beds == 1 ? 'selected' : ''}>1+</option><option value="2" ${state.filters.beds == 2 ? 'selected' : ''}>2+</option><option value="3" ${state.filters.beds == 3 ? 'selected' : ''}>3+</option><option value="4" ${state.filters.beds == 4 ? 'selected' : ''}>4+</option></select></div>
+                                <div><label class="text-[9px] text-gray-500 text-center block mb-1 font-bold uppercase flex items-center justify-center gap-1"><i data-lucide="shower-head" class="w-3 h-3 text-brand-gold"></i> Ban</label><select id="filter-baths" onchange="app.setFilter('baths', Number(this.value))" class="input-padrao text-center px-1"><option value="0" ${state.filters.baths == 0 ? 'selected' : ''}>-</option><option value="1" ${state.filters.baths == 1 ? 'selected' : ''}>1+</option><option value="2" ${state.filters.baths == 2 ? 'selected' : ''}>2+</option><option value="3" ${state.filters.baths == 3 ? 'selected' : ''}>3+</option></select></div>
+                                <div><label class="text-[9px] text-gray-500 text-center block mb-1 font-bold uppercase flex items-center justify-center gap-1"><i data-lucide="car" class="w-3 h-3 text-brand-gold"></i> Vag</label><select id="filter-garage" onchange="app.setFilter('garage', Number(this.value))" class="input-padrao text-center px-1"><option value="0" ${state.filters.garage == 0 ? 'selected' : ''}>-</option><option value="1" ${state.filters.garage == 1 ? 'selected' : ''}>1+</option><option value="2" ${state.filters.garage == 2 ? 'selected' : ''}>2+</option><option value="3" ${state.filters.garage == 3 ? 'selected' : ''}>3+</option></select></div>
                             </div>
                             <div>
                                 <label class="text-[9px] text-gray-400 uppercase font-bold mb-2 flex justify-between tracking-widest mt-1"><span>Preço (R$)</span></label>
                                 <div class="flex gap-2">
-                                    <div class="w-1/2"><input id="filter-min" type="number" class="input-padrao text-center" value="${state.filters.minPrice === state.datasetMin ? '' : state.filters.minPrice}" onchange="app.setFilter('minPrice', Number(this.value))" placeholder="Min"></div>
-                                    <div class="w-1/2"><input id="filter-max" type="number" class="input-padrao text-center" value="${state.filters.maxPrice === state.datasetMax ? '' : state.filters.maxPrice}" onchange="app.setFilter('maxPrice', Number(this.value))" placeholder="Max"></div>
+                                    <div class="w-1/2"><input id="filter-min" type="number" class="input-padrao text-center" value="${state.filters.minPrice}" onchange="app.setFilter('minPrice', Number(this.value))" placeholder="Min"></div>
+                                    <div class="w-1/2"><input id="filter-max" type="number" class="input-padrao text-center" value="${state.filters.maxPrice}" onchange="app.setFilter('maxPrice', Number(this.value))" placeholder="Max"></div>
                                 </div>
                             </div>
                             <button onclick="app.resetFilters()" class="w-full border border-white/10 text-gray-400 py-2.5 rounded-lg text-[10px] uppercase hover:bg-white/5 mt-2 transition-colors">Limpar Filtros</button>
@@ -478,7 +586,11 @@
 
             setFilter: (k,v) => { 
                 if (k === 'minPrice' || k === 'maxPrice' || k === 'beds' || k === 'baths' || k === 'garage') {
-                    state.filters[k] = v ? Number(v) : (k === 'minPrice' ? state.datasetMin : (k === 'maxPrice' ? state.datasetMax : 0));
+                    // Ajuste de segurança: Se vier vazio, usa os limites do dataset
+                    const numV = Number(v);
+                    if (k === 'minPrice') state.filters.minPrice = v ? numV : state.datasetMin;
+                    else if (k === 'maxPrice') state.filters.maxPrice = v ? numV : state.datasetMax;
+                    else state.filters[k] = numV; // beds, baths, garage
                 } else {
                     state.filters[k] = v;
                 }
@@ -493,8 +605,8 @@
                 
                 const setVal = (id, v) => { const el = document.getElementById(id); if(el) el.value = v; };
                 setVal('filter-search', '');
-                setVal('filter-min', '');
-                setVal('filter-max', '');
+                setVal('filter-min', state.datasetMin); // Reseta para o minimo real
+                setVal('filter-max', state.datasetMax); // Reseta para o maximo real
                 setVal('filter-type', 'all');
                 setVal('filter-beds', '0');
                 setVal('filter-baths', '0');
@@ -514,11 +626,18 @@
                 let r=state.properties, f=state.filters; 
                 if(f.purpose!=='all') r=r.filter(p=>p.purpose.toLowerCase()===f.purpose.toLowerCase()); 
                 if(f.type!=='all') r=r.filter(p=>p.type===f.type); 
+                
+                // Filtro de Preço Robusto
                 r=r.filter(p=>Number(p.price)>=f.minPrice && Number(p.price)<=f.maxPrice); 
+                
+                // Filtros Numéricos (Quarto, Banheiro, Vaga)
                 if(f.beds>0) r=r.filter(p=>Number(p.beds)>=f.beds); 
                 if(f.baths>0) r=r.filter(p=>Number(p.baths)>=f.baths); 
                 if(f.garage>0) r=r.filter(p=>Number(p.garage)>=f.garage); 
+                
+                // Busca por Texto (Título ou Localização)
                 if(f.search) r=r.filter(p=>p.title.toLowerCase().includes(f.search.toLowerCase())||p.location.toLowerCase().includes(f.search.toLowerCase())); 
+                
                 state.filteredProperties=r; 
                 
                 if(state.view==='catalog') {
